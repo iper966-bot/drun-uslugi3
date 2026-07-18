@@ -377,24 +377,62 @@ function renderBurmal2Plans(){
   });
 }
 
-function showBurmal2Confirmation(plan){
+async function showBurmal2Confirmation(plan){
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px';
   overlay.innerHTML =
     '<div style="max-width:380px;width:100%;background:linear-gradient(135deg,#8b3dff,#ff5ec4);border-radius:16px;padding:4px;box-shadow:0 20px 40px rgba(0,0,0,.4)">' +
       '<div class="doc-card" style="background:var(--surface-2);border-radius:13px;padding:20px;text-align:center">' +
-        '<i class="ti ti-info-circle" style="font-size:40px;color:var(--accent);margin-bottom:10px;display:block"></i>' +
-        '<p style="font-weight:700;font-size:16px;margin:0 0 4px">' + plan.title + '</p>' +
-        '<p style="font-size:14px;color:var(--text-secondary);margin:0 0 14px">' + plan.cost.toLocaleString('ru-RU') + ' чекушек/мес</p>' +
-        '<p style="font-size:13px;color:var(--text-secondary);margin:0 0 16px">Онлайн-оформление тарифов «Бурмал2» пока недоступно в Друн Услугах. Оформить подключение можно напрямую на сайте оператора.</p>' +
-        '<a class="primary" href="https://burmal2-deploy-4.onrender.com" target="_blank" rel="noopener" style="display:block;width:100%;padding:10px;border-radius:8px;text-decoration:none;color:#fff;box-sizing:border-box">Перейти на сайт Бурмал2</a>' +
-        '<button style="width:100%;margin-top:8px" id="burmal2-close">Закрыть</button>' +
+        '<i class="ti ti-circle-check" style="font-size:40px;color:#3B6D11;margin-bottom:10px;display:block"></i>' +
+        '<p style="font-weight:700;font-size:16px;margin:0 0 4px">Подключаем...</p>' +
+        '<p style="font-size:14px;color:var(--text-secondary);margin:0 0 14px">' + plan.title + ' · ' + plan.cost.toLocaleString('ru-RU') + ' чекушек/мес</p>' +
+        '<div class="error-box" id="burmal2-error"></div>' +
+        '<button class="primary" style="width:100%;margin-top:6px" id="burmal2-close" disabled><span class="spin"></span>Подождите...</button>' +
       '</div>' +
     '</div>';
   document.body.appendChild(overlay);
-  overlay.querySelector('#burmal2-close').onclick = () => overlay.remove();
   overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+
+  const titleEl = overlay.querySelector('p[style*="font-weight:700"]');
+  const closeBtn = overlay.querySelector('#burmal2-close');
+  const errBox = overlay.querySelector('#burmal2-error');
+
+  try {
+    const res = await fetch(API_BASE + '/api/services/burmal2/' + plan.key + '/issue', {
+      method: 'POST',
+      headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({})
+    });
+
+    if (res.status === 401){ overlay.remove(); handleAuthExpired(); return; }
+
+    let data = {};
+    try { data = await res.json(); } catch(parseErr) { data = {}; }
+
+    if (!res.ok){
+      titleEl.textContent = 'Не удалось подключить тариф';
+      errBox.style.display = 'block';
+      errBox.textContent = data.error || 'Оператор «Бурмал2» временно недоступен';
+      closeBtn.disabled = false;
+      closeBtn.innerHTML = 'Закрыть';
+      closeBtn.onclick = () => overlay.remove();
+      return;
+    }
+
+    titleEl.textContent = 'Тариф подключён';
+    if (data.user) renderCabinet(data.user);
+    closeBtn.disabled = false;
+    closeBtn.innerHTML = 'Закрыть';
+    closeBtn.onclick = () => overlay.remove();
+  } catch(e){
+    titleEl.textContent = 'Ошибка соединения';
+    errBox.style.display = 'block';
+    errBox.textContent = 'Не удалось связаться с сервером';
+    closeBtn.disabled = false;
+    closeBtn.innerHTML = 'Закрыть';
+    closeBtn.onclick = () => overlay.remove();
+  }
 }
 
 function updateNav(loggedIn){
