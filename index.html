@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Друн услуги</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+  :root{
+    --accent:#185FA5;
+    --accent-bg:#E6F1FB;
+    --border:#E3E1D9;
+    --surface-1:#F5F4EF;
+    --surface-2:#FFFFFF;
+    --text-primary:#1E1E1C;
+    --text-secondary:#6B6A63;
+    --success:#3B6D11;
+    --warning:#854F0B;
+    --danger:#A32D2D;
+    --radius:8px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:#EFEEE7;
+    color:var(--text-primary);
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+  header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 16px;background:var(--surface-1);border-radius:var(--radius);
+    margin-bottom:20px;flex-wrap:wrap;gap:10px;
+  }
+  .logo{display:flex;align-items:center;gap:8px;font-weight:600;font-size:16px}
+  .logo img{width:24px;height:24px;border-radius:6px;object-fit:cover}
+  nav{display:flex;gap:6px;flex-wrap:wrap}
+  button{
+    height:34px;padding:0 12px;font-size:13px;border-radius:var(--radius);
+    border:1px solid var(--border);background:var(--surface-2);cursor:pointer;
+    color:var(--text-primary);
+  }
+  button:hover{background:var(--surface-1)}
+  button:disabled{opacity:.5;cursor:default}
+  button.primary{background:var(--accent);color:#fff;border:none}
+  button.primary:hover{opacity:.92}
+  .card{background:var(--surface-1);border-radius:12px;padding:24px;margin-bottom:16px}
+  .card.white{background:var(--surface-2);border:1px solid var(--border)}
+  h1{font-size:22px;margin:0 0 6px;font-weight:600}
+  h2{font-size:18px;margin:0 0 12px;font-weight:600}
+  p{margin:0;color:var(--text-secondary);font-size:14px;line-height:1.6}
+  input{
+    height:36px;padding:0 12px;border-radius:var(--radius);border:1px solid var(--border);
+    font-size:14px;background:var(--surface-2);width:100%;
+  }
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+  .tile{
+    background:var(--surface-1);border-radius:var(--radius);padding:16px;text-align:center;
+    cursor:pointer;transition:background .15s;
+  }
+  .tile:hover{background:#EAE8E0}
+  .tile i{font-size:26px;color:var(--accent)}
+  .tile p{font-size:13px;margin-top:8px;color:var(--text-primary)}
+  .screen{display:none}
+  .screen.active{display:block}
+  .login-box{max-width:340px;margin:40px auto;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:28px}
+  .login-box h2{text-align:center}
+  .login-box .hint{text-align:center;margin-bottom:18px}
+  .mascot-hero{display:flex;justify-content:center;margin-bottom:12px}
+  .mascot-hero img{width:64px;height:64px;object-fit:contain}
+  label{font-size:13px;color:var(--text-secondary);display:block;margin-bottom:4px}
+  .field{margin-bottom:14px}
+  .error-box{
+    background:#FCEBEB;color:var(--danger);font-size:13px;padding:10px 12px;
+    border-radius:var(--radius);margin-bottom:14px;display:none;
+  }
+  .profile-header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .avatar{
+    width:46px;height:46px;border-radius:50%;background:var(--accent-bg);
+    display:flex;align-items:center;justify-content:center;font-weight:600;color:var(--accent);
+    overflow:hidden;flex-shrink:0;
+  }
+  .avatar img{width:100%;height:100%;object-fit:cover}
+  .balance-big{
+    display:flex;align-items:center;gap:14px;background:var(--surface-1);
+    border-radius:12px;padding:20px 24px;margin-bottom:16px;
+  }
+  .balance-big img{width:40px;height:40px;object-fit:contain}
+  .balance-big .value{font-size:32px;font-weight:600;line-height:1}
+  .balance-big .label{font-size:13px;color:var(--text-secondary);margin-top:4px}
+  .service-row{
+    display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--border);
+    border-radius:var(--radius);background:var(--surface-2);margin-bottom:8px;
+  }
+  .service-row i{font-size:22px;color:var(--accent);flex-shrink:0}
+  .service-row .info{flex:1}
+  .service-row .info p.title{font-weight:600;font-size:14px;color:var(--text-primary);margin:0}
+  .service-row .info p.meta{font-size:12px;color:var(--text-secondary);margin:2px 0 0}
+  .disclaimer{font-size:12px;color:var(--text-secondary);text-align:center;margin-top:30px}
+  .spin{display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:sp .6s linear infinite;vertical-align:-2px;margin-right:6px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .refresh-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .last-sync{font-size:12px;color:var(--text-secondary)}
+  .tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+  .tab-btn{border-radius:var(--radius)}
+  .tab-btn.active{background:var(--accent);color:#fff;border:none}
+  .subview{display:none}
+  .subview.active{display:block}
+  .param-row{
+    display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border);
+    border-radius:var(--radius);background:var(--surface-2);margin-bottom:8px;
+  }
+  .param-row .info{flex:1}
+  .param-row .info p.title{font-weight:600;font-size:14px;margin:0}
+  .param-row .info p.meta{font-size:12px;color:var(--text-secondary);margin:2px 0 0}
+  .mine-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:320px;margin:0 auto 16px}
+  .mine-cell{
+    aspect-ratio:1;border-radius:var(--radius);border:1px solid var(--border);
+    background:var(--surface-2);display:flex;align-items:center;justify-content:center;
+    font-size:20px;cursor:pointer;
+  }
+  .mine-cell:hover{background:var(--accent-bg)}
+  .mine-cell.done{cursor:default;background:var(--surface-1)}
+  .slots-row{display:flex;justify-content:center;gap:10px;margin:16px 0}
+  .slot-reel{
+    width:64px;height:64px;border-radius:var(--radius);border:1px solid var(--border);
+    background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:30px;
+  }
+  .status-line{font-size:13px;color:var(--text-secondary);text-align:center;margin-bottom:10px}
+  .result-line{font-size:14px;text-align:center;font-weight:600;min-height:20px;margin-bottom:10px}
+  .center{text-align:center}
+
+  /* ---------- Мобильная адаптация ---------- */
+  @media (max-width: 560px){
+    .wrap{padding:12px 10px 40px}
+    header{padding:10px 12px;border-radius:10px;gap:8px}
+    .logo{font-size:14px;gap:6px}
+    .logo img{width:20px;height:20px}
+    nav{gap:6px;width:100%;justify-content:flex-start;flex-wrap:wrap}
+    nav button{flex:1 1 auto;min-width:0;padding:0 8px;font-size:12px}
+    nav a{flex:1 1 auto;min-width:0}
+    nav a button{width:100%}
+
+    .card{padding:16px;border-radius:10px;margin-bottom:12px}
+    h1{font-size:19px}
+    h2{font-size:16px}
+    p{font-size:13px}
+
+    .login-box{margin:20px auto;padding:20px 18px}
+    .mascot-hero img{width:52px;height:52px}
+
+    .profile-header{gap:10px;margin-bottom:14px}
+    .avatar{width:40px;height:40px}
+    .balance-big{padding:16px 18px;gap:10px}
+    .balance-big img{width:32px;height:32px}
+    .balance-big .value{font-size:26px}
+
+    .refresh-row{flex-wrap:wrap;gap:8px}
+    .refresh-row button{width:100%}
+    .last-sync{width:100%}
+
+    .tabs{gap:6px}
+    .tab-btn{flex:1 1 auto;font-size:12px;padding:0 8px;white-space:nowrap}
+
+    /* Карточки услуг/параметров: на узком экране кнопка уезжает вниз,
+       на всю ширину, а не сжимается рядом с длинным текстом. */
+    .service-row, .param-row{
+      flex-wrap:wrap;
+      padding:12px;
+      gap:8px 10px;
+    }
+    .service-row i, .param-row i{font-size:20px}
+    .service-row .info, .param-row .info{min-width:0;flex-basis:100%}
+    .service-row button, .param-row button{width:100%;flex:none}
+
+    .mine-grid{max-width:100%}
+    .slots-row{gap:6px}
+    .slot-reel{width:52px;height:52px;font-size:24px}
+
+    /* Модалки (анкеты, документы) — не должны упираться в края экрана
+       и должны помещаться по высоте на маленьких телефонах. */
+    .modal-overlay{padding:10px}
+    .modal-overlay > div{max-height:94vh}
+    .modal-card{padding:16px !important}
+    .doc-card{padding:16px !important}
+    .doc-card img{width:72px !important;height:72px !important}
+  }
+
+  @media (max-width: 380px){
+    nav button{font-size:11px;padding:0 6px}
+    .tab-btn{font-size:11px;padding:0 6px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="logo"><img src="https://drun-messentger-v2.onrender.com/mascot-burmaldaets.png" alt=""> Друн услуги</div>
+    <nav>
+      <a href="https://drun-messentger-v2.onrender.com" target="_blank" rel="noopener" style="text-decoration:none">
+        <button type="button"><i class="ti ti-message-circle" style="font-size:14px;vertical-align:-2px"></i> Мессенджер</button>
+      </a>
+      <button id="nav-login" onclick="showScreen('login')">Вход</button>
+      <button id="nav-cabinet" onclick="showScreen('cabinet')" style="display:none">Кабинет</button>
+      <button id="nav-logout" onclick="logout()" style="display:none">Выйти</button>
+    </nav>
+  </header>
+
+  <!-- ГЛАВНАЯ / ВХОД -->
+  <div id="login" class="screen active">
+    <div class="card" style="margin-bottom:24px">
+      <div class="mascot-hero"><img src="https://drun-messentger-v2.onrender.com/mascot-burmaldaets.png" alt="Бурмалдаец"></div>
+      <h1 style="text-align:center">Друн услуги</h1>
+      <p style="text-align:center">Единый портал государственных услуг Друн-республики. Баланс чекушек синхронизирован с Друн мессенджером.</p>
+      <p style="text-align:center;margin-top:10px">
+        <a href="https://drun-messentger-v2.onrender.com" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;text-decoration:none">
+          Перейти в Друн мессенджер →
+        </a>
+      </p>
+    </div>
+    <div class="login-box">
+      <h2>Вход в личный кабинет</h2>
+      <p class="hint">Тот же аккаунт, что и в Друн мессенджере</p>
+      <div class="error-box" id="login-error"></div>
+      <div class="field">
+        <label>Имя пользователя</label>
+        <input id="login-username" placeholder="username" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>Пароль</label>
+        <input id="login-password" type="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <div class="field" id="twofa-field" style="display:none">
+        <label>Код двухфакторной аутентификации</label>
+        <input id="login-2fa" placeholder="000000">
+      </div>
+      <button class="primary" id="login-btn" style="width:100%" onclick="doLogin()">Войти</button>
+    </div>
+  </div>
+
+  <!-- КАБИНЕТ -->
+  <div id="cabinet" class="screen">
+    <div class="profile-header">
+      <div class="avatar" id="cab-avatar">?</div>
+      <div>
+        <p style="font-weight:600;color:var(--text-primary);margin:0" id="cab-nickname">—</p>
+        <p style="margin:0" id="cab-username">—</p>
+      </div>
+    </div>
+
+    <div class="balance-big">
+      <img src="https://drun-messentger-v2.onrender.com/mascot-burmaldaets.png" alt="">
+      <div>
+        <div class="value" id="cab-balance">—</div>
+        <div class="label">чекушек на балансе</div>
+      </div>
+    </div>
+
+    <div class="refresh-row">
+      <span class="last-sync" id="last-sync">—</span>
+      <button onclick="refreshBalance()" id="refresh-btn"><i class="ti ti-refresh" style="font-size:14px;vertical-align:-2px"></i> Обновить баланс</button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="hammam" onclick="showTab('hammam')">Хаммам (ЖКХ)</button>
+      <button class="tab-btn" data-tab="mine" onclick="showTab('mine')">Госшахта</button>
+      <button class="tab-btn" data-tab="slots" onclick="showTab('slots')">Казначейская лотерея</button>
+      <button class="tab-btn" data-tab="burmal2" onclick="showTab('burmal2')">Связь (Бурмал2)</button>
+    </div>
+
+    <!-- ХАММАМ -->
+    <div id="tab-hammam" class="subview active">
+      <div class="card white">
+        <h2 style="font-size:15px">Коммунальная служба «Хаммам»</h2>
+        <p style="margin-bottom:12px">Прокачивайте параметры хаммама — растёт пассивный доход чекушек в час.</p>
+        <div class="center" style="margin-bottom:12px">
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:4px">Накоплено к получению</p>
+          <p style="font-size:24px;font-weight:600" id="hammam-banked">—</p>
+          <p style="font-size:12px;color:var(--text-secondary)" id="hammam-perhour">—</p>
+        </div>
+        <button class="primary" style="width:100%;margin-bottom:16px" id="collect-btn" onclick="collectHammam()">Собрать доход</button>
+        <div id="hammam-params"></div>
+      </div>
+    </div>
+
+    <!-- ШАХТА -->
+    <div id="tab-mine" class="subview">
+      <div class="card white">
+        <h2 style="font-size:15px">Государственная шахта</h2>
+        <p style="margin-bottom:12px">Бурмалдаец копает клетки в поисках чекушек. 6 попыток за раунд, пауза 3 минуты.</p>
+        <div class="status-line" id="mine-status">—</div>
+        <div class="result-line" id="mine-result"></div>
+        <div class="mine-grid" id="mine-grid"></div>
+        <button class="primary" style="width:100%" id="mine-start-btn" onclick="startMine()">Начать раунд</button>
+      </div>
+    </div>
+
+    <!-- СЛОТЫ -->
+    <div id="tab-slots" class="subview">
+      <div class="card white">
+        <h2 style="font-size:15px">Казначейская лотерея</h2>
+        <p style="margin-bottom:8px">Три бурмалдайских символа подряд — джекпот. Пауза между попытками 90 секунд.</p>
+        <div class="status-line" id="slots-status">—</div>
+        <div class="slots-row">
+          <div class="slot-reel" id="reel-0">🐹</div>
+          <div class="slot-reel" id="reel-1">🐹</div>
+          <div class="slot-reel" id="reel-2">🐹</div>
+        </div>
+        <div class="result-line" id="slots-result"></div>
+        <button class="primary" style="width:100%" id="slots-btn" onclick="spinSlots()">Крутить</button>
+      </div>
+    </div>
+    <!-- СВЯЗЬ БУРМАЛ2 -->
+    <div id="tab-burmal2" class="subview">
+      <div class="card white">
+        <h2 style="font-size:15px">Оператор связи «Бурмал2»</h2>
+        <p style="margin-bottom:16px">Тарифы для бурмалдайцев. Оформление — в один клик, госпошлина не взимается.</p>
+        <div id="burmal2-plans"></div>
+      </div>
+    </div>
+
+    <div class="card white" style="margin-top:16px">
+      <h2 style="font-size:15px">Доступные услуги</h2>
+      <div id="services-list"><p>Загрузка...</p></div>
+    </div>
+  </div>
+
+  <p class="disclaimer">Друн услуги — неофициальный шуточный портал. Баланс чекушек синхронизирован с Друн мессенджером через тот же аккаунт и общий API.</p>
+</div>
+
+<script>
+const API_BASE = "https://drun-messentger-v2.onrender.com";
+const TOKEN_KEY = "drun_uslugi_token";
+
+function authHeaders(){
+  const token = localStorage.getItem(TOKEN_KEY);
+  return token ? { 'Authorization': 'Bearer ' + token } : {};
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+  document.querySelectorAll('.subview').forEach(s=>s.classList.toggle('active', s.id==='tab-'+name));
+  if (name === 'hammam') loadHammam();
+  if (name === 'mine') loadMineStatus();
+  if (name === 'slots') loadSlotsStatus();
+  if (name === 'burmal2') renderBurmal2Plans();
+}
+
+// ---------- Связь Бурмал2 ----------
+const BURMAL2_PLANS = [
+  { key:'eco', title:'Бурмалда Эко', cost:20, desc:'2 ГБ пуха в сети · 50 минут ушастых звонков · базовый доступ к «Друн FM»', icon:'ti-leaf' },
+  { key:'plus', title:'Бурмалда +', cost:60, desc:'15 ГБ на скорости света ушей · безлимит звонков внутри норы · полный доступ к «Друн FM»', icon:'ti-bolt' },
+  { key:'xxl', title:'Бурмалдаец XXL', cost:150, desc:'Безлимитный интернет 24/7 · личный неоновый ореол · приоритетная линия до Луны', icon:'ti-crown' }
+];
+
+function renderBurmal2Plans(){
+  const box = document.getElementById('burmal2-plans');
+  box.innerHTML = '';
+  BURMAL2_PLANS.forEach(p => {
+    const row = document.createElement('div');
+    row.className = 'service-row';
+    row.innerHTML = '<i class="ti ' + p.icon + '"></i>' +
+      '<div class="info"><p class="title">' + p.title + ' — ' + p.cost.toLocaleString('ru-RU') + ' чекушек/мес</p>' +
+      '<p class="meta">' + p.desc + '</p></div>';
+    const btn = document.createElement('button');
+    btn.className = 'primary';
+    btn.textContent = 'Купить';
+    btn.onclick = () => showBurmal2Confirmation(p);
+    row.appendChild(btn);
+    box.appendChild(row);
+  });
+}
+
+function showBurmal2Confirmation(plan){
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px';
+  overlay.innerHTML =
+    '<div style="max-width:380px;width:100%;background:linear-gradient(135deg,#8b3dff,#ff5ec4);border-radius:16px;padding:4px;box-shadow:0 20px 40px rgba(0,0,0,.4)">' +
+      '<div class="doc-card" style="background:var(--surface-2);border-radius:13px;padding:20px;text-align:center">' +
+        '<i class="ti ti-info-circle" style="font-size:40px;color:var(--accent);margin-bottom:10px;display:block"></i>' +
+        '<p style="font-weight:700;font-size:16px;margin:0 0 4px">' + plan.title + '</p>' +
+        '<p style="font-size:14px;color:var(--text-secondary);margin:0 0 14px">' + plan.cost.toLocaleString('ru-RU') + ' чекушек/мес</p>' +
+        '<p style="font-size:13px;color:var(--text-secondary);margin:0 0 16px">Онлайн-оформление тарифов «Бурмал2» пока недоступно в Друн Услугах. Оформить подключение можно напрямую на сайте оператора.</p>' +
+        '<a class="primary" href="https://burmal2-deploy-4.onrender.com" target="_blank" rel="noopener" style="display:block;width:100%;padding:10px;border-radius:8px;text-decoration:none;color:#fff;box-sizing:border-box">Перейти на сайт Бурмал2</a>' +
+        '<button style="width:100%;margin-top:8px" id="burmal2-close">Закрыть</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  overlay.querySelector('#burmal2-close').onclick = () => overlay.remove();
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+}
+
+function updateNav(loggedIn){
+  document.getElementById('nav-login').style.display = loggedIn ? 'none' : '';
+  document.getElementById('nav-cabinet').style.display = loggedIn ? '' : 'none';
+  document.getElementById('nav-logout').style.display = loggedIn ? '' : 'none';
+}
+
+function setLoginError(msg){
+  const box = document.getElementById('login-error');
+  if (!msg){ box.style.display = 'none'; box.textContent=''; return; }
+  box.style.display = 'block';
+  box.textContent = msg;
+}
+
+async function doLogin(){
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+  const twofaField = document.getElementById('twofa-field');
+  const codeInput = document.getElementById('login-2fa');
+  const code = codeInput.value.trim();
+  const btn = document.getElementById('login-btn');
+  setLoginError(null);
+
+  if (!username || !password){
+    setLoginError('Введите имя пользователя и пароль');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Входим...';
+
+  try {
+    const res = await fetch(API_BASE + '/api/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(code ? {username, password, code} : {username, password})
+    });
+    let data = {};
+    try { data = await res.json(); } catch(parseErr) { data = {}; }
+
+    if (!res.ok){
+      if (data.twofa_required){
+        twofaField.style.display = 'block';
+        setLoginError(code ? (data.error || 'Неверный код двухфакторной аутентификации') : (data.error || 'Введите код двухфакторной аутентификации'));
+      } else {
+        twofaField.style.display = 'none';
+        codeInput.value = '';
+        setLoginError(data.error || 'Ошибка входа');
+      }
+      return;
+    }
+
+    if (!data.token || !data.user){
+      setLoginError('Сервер Друн мессенджера вернул неожиданный ответ');
+      return;
+    }
+
+    localStorage.setItem(TOKEN_KEY, data.token);
+    renderCabinet(data.user);
+    updateNav(true);
+    showScreen('cabinet');
+    showTab('hammam');
+    loadServices();
+    codeInput.value = '';
+    twofaField.style.display = 'none';
+  } catch (e) {
+    setLoginError('Не удалось связаться с Друн мессенджером. Проверьте соединение.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Войти';
+  }
+}
+
+function logout(){
+  localStorage.removeItem(TOKEN_KEY);
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-2fa').value = '';
+  document.getElementById('twofa-field').style.display = 'none';
+  updateNav(false);
+  showScreen('login');
+}
+
+function renderCabinet(user){
+  if (!user) return;
+  document.getElementById('cab-nickname').textContent = user.nickname || user.username;
+  document.getElementById('cab-username').textContent = '@' + user.username;
+  document.getElementById('cab-balance').textContent = Number(user.balance ?? 0).toLocaleString('ru-RU');
+  const avatarBox = document.getElementById('cab-avatar');
+  if (user.avatar){
+    avatarBox.innerHTML = '<img src="' + user.avatar + '" alt="">';
+  } else {
+    const initials = (user.nickname || user.username || '?').slice(0,2).toUpperCase();
+    avatarBox.textContent = initials;
+  }
+  document.getElementById('last-sync').textContent = 'Обновлено: ' + new Date().toLocaleTimeString('ru-RU');
+}
+
+async function refreshBalance(){
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token) { showScreen('login'); return; }
+  const btn = document.getElementById('refresh-btn');
+  btn.disabled = true;
+  try {
+    const res = await fetch(API_BASE + '/api/me', { headers: authHeaders() });
+    if (res.status === 401){ handleAuthExpired(); return; }
+    let data = {};
+    try { data = await res.json(); } catch(parseErr) { document.getElementById('last-sync').textContent = 'Ошибка ответа сервера'; return; }
+    renderCabinet(data.user);
+  } catch (e) {
+    document.getElementById('last-sync').textContent = 'Не удалось обновить — проверьте соединение';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function handleAuthExpired(){
+  logout();
+  setLoginError('Сессия истекла, войдите снова');
+  showScreen('login');
+}
+
+// ---------- Хаммам ----------
+async function loadHammam(){
+  try {
+    const res = await fetch(API_BASE + '/api/hammam', { headers: authHeaders() });
+    if (res.status === 401){ handleAuthExpired(); return; }
+    const data = await res.json();
+    renderHammam(data.hammam);
+  } catch(e){}
+}
+
+function renderHammam(h){
+  document.getElementById('hammam-banked').textContent = h.banked.toLocaleString('ru-RU') + ' / ' + h.cap.toLocaleString('ru-RU');
+  document.getElementById('hammam-perhour').textContent = '+' + h.perHour.toLocaleString('ru-RU') + ' чекушек/час';
+  const box = document.getElementById('hammam-params');
+  box.innerHTML = '';
+  for (const key in h.params){
+    const p = h.params[key];
+    const row = document.createElement('div');
+    row.className = 'param-row';
+    const costText = p.nextCost == null ? 'Максимальный уровень' : ('Апгрейд: ' + p.nextCost.toLocaleString('ru-RU') + ' чекушек');
+    row.innerHTML = '<i class="ti ti-flame" style="font-size:20px;color:var(--accent)"></i>' +
+      '<div class="info"><p class="title">' + p.emoji + ' ' + p.label + ' · ур. ' + p.level + '</p>' +
+      '<p class="meta">' + p.desc + ' · ' + costText + '</p></div>';
+    const btn = document.createElement('button');
+    btn.textContent = p.nextCost == null ? 'Максимум' : 'Улучшить';
+    btn.disabled = p.nextCost == null;
+    btn.onclick = () => upgradeHammam(key);
+    row.appendChild(btn);
+    box.appendChild(row);
+  }
+}
+
+async function upgradeHammam(param){
+  try {
+    const res = await fetch(API_BASE + '/api/hammam/upgrade/' + param, { method:'POST', headers: authHeaders() });
+    if (res.status === 401){ handleAuthExpired(); return; }
+    let data = {};
+    try { data = await res.json(); } catch(parseErr) { alert('Ошибка ответа сервера'); return; }
+    if (!res.ok){ alert(data.error || 'Не удалось улучшить'); return; }
+    renderHammam(data.hammam);
+    renderCabinet(data.user);
+  } catch(e){ alert('Ошибка соединения'); }
+}
+
+async function collectHammam(){
+  const btn = document.getElementById('collect-btn');
+  btn.disabled = true;
+  try {
+    const res = await fetch(API_BASE + '/api/hammam/collect', { method:'POST', headers: authHeaders() });
+    if (res.status === 401){ handleAuthExpired(); return; }
+    let data = {};
+    try { data = await res.json(); } catch(parseErr) { return; }
+    renderHammam(data.hammam);
+    renderCabinet(data.user);
+  } catch(e){} finally { btn.disabled = false; }
+}
+
+// ---------- Шахта ----------
+let mineGridSize = 25;
+function renderMineGrid(revealed){
+  const box = document.getElementById('mine-grid');
+  box.innerHTML = '';
+  for (let i=0;i<mineGridSize;i++){
+    const cell = document.createElement('div');
+    cell.className = 'mine-cell' + (revealed[i] ? ' done' : '');
+    cell.textContent = revealed[i] ? emojiForKind(revealed[i]) : '';
+    if (!revealed[i]) cell.onclick = () => digMine(i);
+    box.appendChild(cell);
+  }
+}
+function emojiForKind(kind){
+  const map = { empty:'🪨', chekushka:'🍾', chekushka2:'🍾', chekushka5:'🍾', gem:'💎', trap:'💥' };
+  return map[kind] || '❔';
+}
+
+async function loadMineStatus(){
+  try {
+    const res = await fetch(API_BASE + '/api/mine/status', { headers: authHeaders() });
+    if (res.status === 401){ handleAuthExpired(); return; }
+    const data = await res.json();
+    mineGridSize = data.gridSize || 25;
+    if (data.active){
+      document.getElementById('mine-status').textContent = 'Осталось попыток: ' + data.digsLeft + ' · накоплено за раунд: ' + data.earned;
+      document.getElementById('mine-start-btn').style.display = 'none';
+      renderMineGrid(data.revealed);
+    } else {
+      document.getElementById('mine-start-btn').style.display = '';
+      if (data.remainingMs > 0){
+        const sec = Math.ceil(data.remainingMs/1000);
+        document.getElementById('mine-status').textContent = 'Бурмалдаец отдыхает ещё ' + sec + ' сек.';
+        document.getElementById('mine-start-btn').disabled = true;
+      } else {
+        document.getElementById('mine-status').textContent = 'Раунд не начат';
+        document.getElementById('mine-start-btn').disabled = false;
+      }
+      renderMineGrid(new Array(mineGridSize).fill(null));
+    }
+  } catch(e){}
+}
+
+async function startMine(){
+  const btn = document.getElementById('mine-start-btn');
+  btn.disabled = true;
+  document.getElementById('mine-result').textContent = '';
+  try {
+    const res = await fetch(API_BASE + '/api/mine/start', { method:'POST', headers: authHeaders() });
+    if (res.status === 401){ handleAuthExpired(); return; }
+    let data = {};
+    try { data = await res.json(); } catch(parseErr) { return; }
+    if (res.status === 429){ document.getElementById('mine-status').textContent = data.error; return; }
+    mineGridSize = data.gridSize || 25;
+    document.getElementById('mine-status').textContent = 'Осталось попыток: ' + data.digsLeft;
+    btn.style.display = 'none';
+    renderMineGrid(data.revealed);
+  } catch(e){} finally { btn.disabled = false; }
+}
+
+async function digMine(idx){
+  try {
+    const res = await fetch(API_BASE + '/api/mine/dig', {
+      method:'POST',
+      headers: { ...authHeaders(), 'Content-Type':'application/json' },
+      body: JSON.stringify({ cell: idx })
+    });
+    if (res.status === 401){ handleAuthExpired(); return; }
+    let data = {};
+    try { data = await res.json(); } catch(parseErr) { return; }
+    if (!res.ok){ document.getElementById('mine-result').textContent = data.error; return; }
+    renderMineGrid(data.revealed);
+    document.getElementById('mine-status').textContent = 'Осталось попыток: ' + data.digsLeft + ' · накоплено за раунд: ' + data.earned;
+    document.getElementById('mine-result').textContent = data.emoji + ' ' + data.label + (data.value !== 0 ? (data.value > 0 ? ' +' : ' ') + data.value : '');
+    if (data.finished){
+      document.getElementById('mine-result').textContent += ' — раунд окончен, получено ' + data.payout + ' чекушек';
+      renderCabinet(data.user);
+      setTimeout(loadMineStatus, 1500);
+    }
+  } catch(e){}
+}
+
+// ---------- Слоты ----------
+async function loadSlotsStatus(){
+  try {
+    const res = await fetch(API_BASE + '/api/slots/status', { headers: authHeaders() });
+    if (res.status === 401){ handleAuthExpired(); return; }
+    const data = await res.json();
+    const btn = document.getElementById('slots-btn');
+    if (data.remainingMs > 0){
+      const sec = Math.ceil(data.remainingMs/1000);
+      document.getElementById('slots-status').textContent = 'Автомат перезаряжается ещё ' + sec + ' сек.';
+      btn.disabled = true;
+      setTimeout(loadSlotsStatus, 1000);
+    } else {
+      document.getElementById('slots-status').textContent = 'Готово к игре';
+      btn.disabled = false;
+    }
+  } catch(e){}
+}
+
+async function spinSlots(){
+  const btn = document.getElementById('slots-btn');
+  btn.disabled = true;
+  document.getElementById('slots-result').textContent = '';
+  try {
+    const res = await fetch(API_BASE + '/api/slots/spin', { method:'POST', headers: authHeaders() });
+    if (res.status === 401){ handleAuthExpired(); return; }
+    let data = {};
+    try { data = await res.json(); } catch(parseErr) { return; }
+    if (res.status === 429){ document.getElementById('slots-status').textContent = data.error; loadSlotsStatus(); return; }
+    data.reels.forEach((r,i) => document.getElementById('reel-'+i).textContent = r.emoji);
+    if (data.outcome === 'triple'){
+      document.getElementById('slots-result').textContent = 'Джекпот! +' + data.payout + ' чекушек';
+    } else if (data.outcome === 'pair'){
+      document.getElementById('slots-result').textContent = 'Утешительный приз +' + data.payout + ' чекушек';
+    } else {
+      document.getElementById('slots-result').textContent = 'Не повезло — 0 чекушек';
+    }
+    renderCabinet(data.user);
+    loadSlotsStatus();
+  } catch(e){} finally { btn.disabled = false; }
+}
+
+// ---------- Госуслуги ----------
+let servicesCache = [];
+
+async function loadServices(){
+  const box = document.getElementById('services-list');
+  try {
+    const res = await fetch(API_BASE + '/api/services', { headers: authHeaders() });
+    if (res.status === 401){ handleAuthExpired(); return; }
+    const data = await res.json();
+    servicesCache = data.services;
+    renderServices(data.services);
+  } catch(e){ box.innerHTML = '<p>Не удалось загрузить услуги</p>'; }
+}
+
+function renderServices(services){
+  const box = document.getElementById('services-list');
+  box.innerHTML = '';
+  const passportIssued = services.some(s => s.key === 'passport' && s.issued);
+  services.forEach(s => {
+    const row = document.createElement('div');
+    row.className = 'service-row';
+    const locked = s.requiresPassport && !passportIssued && !s.issued;
+    let meta = s.issued ? 'Оформлено' : ('Госпошлина: ' + s.cost.toLocaleString('ru-RU') + ' чекушек');
+    if (locked) meta += ' · нужен паспорт бурмалдайца';
+    row.innerHTML = '<i class="ti ti-file-certificate"></i>' +
+      '<div class="info"><p class="title">' + s.title + '</p>' +
+      '<p class="meta">' + meta + '</p></div>';
+    const btn = document.createElement('button');
+    if (s.issued){
+      btn.textContent = s.document ? 'Показать документ' : 'Оформлено';
+      if (s.document){
+        btn.onclick = () => (s.key === 'passport' ? showPassportDocument(s.document) : showRegistrationDocument(s.document));
+      } else {
+        btn.className = 'primary';
+        btn.disabled = true;
+      }
+    } else if (locked){
+      btn.textContent = 'Нужен паспорт';
+      btn.disabled = true;
+    } else {
+      btn.textContent = 'Оформить';
+      btn.onclick = () => {
+        if (s.key === 'passport') openPassportForm(s);
+        else if (s.key === 'hammam_registration') openRegistrationForm(s);
+        else issueService(s.key, null, btn);
+      };
+    }
+    row.appendChild(btn);
+    box.appendChild(row);
+  });
+}
+
+async function issueService(key, payload, btn){
+  if (btn){ btn.disabled = true; }
+  const original = btn ? btn.textContent : '';
+  if (btn){ btn.innerHTML = '<span class="spin"></span>Оформляем...'; }
+  try {
+    const res = await fetch(API_BASE + '/api/services/' + key + '/issue', {
+      method:'POST',
+      headers: { ...authHeaders(), 'Content-Type':'application/json' },
+      body: JSON.stringify(payload || {})
+    });
+    if (res.status === 401){ handleAuthExpired(); return null; }
+    let data = {};
+    try { data = await res.json(); } catch(parseErr) {
+      alert('Ошибка ответа сервера');
+      if (btn){ btn.disabled = false; btn.textContent = original; }
+      return null;
+    }
+    if (!res.ok){
+      alert(data.error || 'Не удалось оформить услугу');
+      if (btn){ btn.disabled = false; btn.textContent = original; }
+      return null;
+    }
+    if (data.user) renderCabinet(data.user);
+    await loadServices();
+    return data.service;
+  } catch(e){
+    alert('Ошибка соединения');
+    if (btn){ btn.disabled = false; btn.textContent = original; }
+    return null;
+  }
+}
+
+// ---------- Форма оформления паспорта (ФИО, дата рождения, место рождения, фото) ----------
+function openPassportForm(service){
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px';
+  overlay.innerHTML =
+    '<div class="card white modal-card" style="max-width:380px;width:100%;max-height:90vh;overflow:auto">' +
+      '<h2 style="font-size:16px">Анкета на паспорт бурмалдайца</h2>' +
+      '<p style="margin-bottom:16px">Госпошлина: ' + service.cost.toLocaleString('ru-RU') + ' чекушек</p>' +
+      '<div class="error-box" id="pf-error"></div>' +
+      '<div class="field"><label>Фамилия Имя Отчество</label>' +
+        '<input id="pf-name" placeholder="Бурмалдаев Бурмалдай Бурмалдаевич"></div>' +
+      '<div class="field"><label>Дата рождения</label>' +
+        '<input id="pf-birthdate" type="date"></div>' +
+      '<div class="field"><label>Место рождения</label>' +
+        '<input id="pf-birthplace" placeholder="Хаммам-Друнск"></div>' +
+      '<div class="field"><label>Фото на паспорт</label>' +
+        '<input id="pf-photo" type="file" accept="image/*">' +
+        '<div id="pf-photo-preview" style="margin-top:8px;display:none">' +
+          '<img id="pf-photo-img" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border)"></div>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;margin-top:8px">' +
+        '<button id="pf-cancel" style="flex:1">Отмена</button>' +
+        '<button class="primary" id="pf-submit" style="flex:1">Оформить</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(overlay);
+
+  let photoDataUrl = null;
+  const fileInput = overlay.querySelector('#pf-photo');
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      photoDataUrl = reader.result;
+      overlay.querySelector('#pf-photo-img').src = photoDataUrl;
+      overlay.querySelector('#pf-photo-preview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  overlay.querySelector('#pf-cancel').onclick = () => overlay.remove();
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+
+  function setError(msg){
+    const box = overlay.querySelector('#pf-error');
+    if (!msg){ box.style.display='none'; box.textContent=''; return; }
+    box.style.display='block'; box.textContent = msg;
+  }
+
+  overlay.querySelector('#pf-submit').onclick = async () => {
+    setError(null);
+    const full_name = overlay.querySelector('#pf-name').value.trim();
+    const birth_date = overlay.querySelector('#pf-birthdate').value;
+    const birth_place = overlay.querySelector('#pf-birthplace').value.trim();
+    if (!full_name){ setError('Укажите ФИО'); return; }
+    if (!birth_date){ setError('Укажите дату рождения'); return; }
+    if (!birth_place){ setError('Укажите место рождения'); return; }
+    if (!photoDataUrl){ setError('Загрузите фото'); return; }
+
+    const submitBtn = overlay.querySelector('#pf-submit');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spin"></span>Оформляем...';
+    const result = await issueService('passport', { full_name, birth_date, birth_place, photo: photoDataUrl }, null);
+    if (result){
+      overlay.remove();
+      if (result.document) showPassportDocument(result.document);
+    } else {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Оформить';
+    }
+  };
+}
+
+// ---------- Форма оформления прописки в Хаммаме (только цель прописки) ----------
+function openRegistrationForm(service){
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px';
+  overlay.innerHTML =
+    '<div class="card white modal-card" style="max-width:380px;width:100%;max-height:90vh;overflow:auto">' +
+      '<h2 style="font-size:16px">Прописка в Хаммаме</h2>' +
+      '<p style="margin-bottom:16px">Госпошлина: ' + service.cost.toLocaleString('ru-RU') + ' чекушек. Комната назначается автоматически.</p>' +
+      '<div class="error-box" id="rf-error"></div>' +
+      '<div class="field"><label>Цель прописки</label>' +
+        '<input id="rf-purpose" placeholder="Постоянное проживание"></div>' +
+      '<div style="display:flex;gap:8px;margin-top:8px">' +
+        '<button id="rf-cancel" style="flex:1">Отмена</button>' +
+        '<button class="primary" id="rf-submit" style="flex:1">Оформить</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(overlay);
+
+  overlay.querySelector('#rf-cancel').onclick = () => overlay.remove();
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+
+  function setError(msg){
+    const box = overlay.querySelector('#rf-error');
+    if (!msg){ box.style.display='none'; box.textContent=''; return; }
+    box.style.display='block'; box.textContent = msg;
+  }
+
+  overlay.querySelector('#rf-submit').onclick = async () => {
+    setError(null);
+    const purpose = overlay.querySelector('#rf-purpose').value.trim();
+    if (!purpose){ setError('Укажите цель прописки'); return; }
+
+    const submitBtn = overlay.querySelector('#rf-submit');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spin"></span>Оформляем...';
+    const result = await issueService('hammam_registration', { purpose }, null);
+    if (result){
+      overlay.remove();
+      if (result.document) showRegistrationDocument(result.document);
+    } else {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Оформить';
+    }
+  };
+}
+
+// ---------- Красивое свидетельство о прописке ----------
+function showRegistrationDocument(doc){
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px';
+  overlay.innerHTML =
+    '<div style="max-width:380px;width:100%;background:linear-gradient(135deg,var(--success),#1F3D0A);border-radius:16px;padding:4px;box-shadow:0 20px 40px rgba(0,0,0,.4)">' +
+      '<div class="doc-card" style="background:var(--surface-2);border-radius:13px;padding:20px">' +
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">' +
+          '<i class="ti ti-home-check" style="font-size:22px;color:var(--success)"></i>' +
+          '<div><p style="font-weight:700;font-size:14px;margin:0">Друн-республика</p>' +
+          '<p style="font-size:11px;color:var(--text-secondary);margin:0">Свидетельство о прописке</p></div>' +
+        '</div>' +
+        '<p style="font-size:12px;color:var(--text-secondary);margin:0">Помещение</p>' +
+        '<p style="font-size:20px;font-weight:700;margin:2px 0 10px">Хаммам, комната ' + doc.room_number + '</p>' +
+        '<p style="font-size:12px;color:var(--text-secondary);margin:0">Цель прописки</p>' +
+        '<p style="font-size:14px;margin:2px 0 0">' + doc.purpose + '</p>' +
+        '<div style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--border);text-align:center">' +
+          '<p style="font-size:11px;color:var(--text-secondary);margin:0">Номер документа</p>' +
+          '<p style="font-size:15px;font-weight:700;letter-spacing:1px;margin:2px 0 0">' + doc.doc_number + '</p>' +
+        '</div>' +
+        '<button class="primary" style="width:100%;margin-top:16px" id="reg-doc-close">Закрыть</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  overlay.querySelector('#reg-doc-close').onclick = () => overlay.remove();
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+}
+
+// ---------- Красивая карточка выданного паспорта ----------
+function showPassportDocument(doc){
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px';
+  const dateStr = doc.birth_date ? new Date(doc.birth_date).toLocaleDateString('ru-RU') : '—';
+  overlay.innerHTML =
+    '<div style="max-width:380px;width:100%;background:linear-gradient(135deg,var(--accent),#0E3F72);border-radius:16px;padding:4px;box-shadow:0 20px 40px rgba(0,0,0,.4)">' +
+      '<div class="doc-card" style="background:var(--surface-2);border-radius:13px;padding:20px">' +
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">' +
+          '<i class="ti ti-shield-check" style="font-size:22px;color:var(--accent)"></i>' +
+          '<div><p style="font-weight:700;font-size:14px;margin:0">Друн-республика</p>' +
+          '<p style="font-size:11px;color:var(--text-secondary);margin:0">Паспорт бурмалдайца</p></div>' +
+        '</div>' +
+        '<div style="display:flex;gap:14px">' +
+          '<img src="' + API_BASE + doc.photo_url + '" style="width:88px;height:88px;object-fit:cover;border-radius:10px;border:1px solid var(--border)">' +
+          '<div style="flex:1;min-width:0">' +
+            '<p style="font-size:15px;font-weight:600;margin:0 0 6px">' + doc.full_name + '</p>' +
+            '<p style="font-size:12px;color:var(--text-secondary);margin:0">Дата рождения</p>' +
+            '<p style="font-size:13px;margin:0 0 6px">' + dateStr + '</p>' +
+            '<p style="font-size:12px;color:var(--text-secondary);margin:0">Место рождения</p>' +
+            '<p style="font-size:13px;margin:0">' + doc.birth_place + '</p>' +
+          '</div>' +
+        '</div>' +
+        '<div style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--border);text-align:center">' +
+          '<p style="font-size:11px;color:var(--text-secondary);margin:0">Номер документа</p>' +
+          '<p style="font-size:15px;font-weight:700;letter-spacing:1px;margin:2px 0 0">' + doc.doc_number + '</p>' +
+        '</div>' +
+        '<button class="primary" style="width:100%;margin-top:16px" id="doc-close">Закрыть</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  overlay.querySelector('#doc-close').onclick = () => overlay.remove();
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+}
+
+// Автовход, если токен уже есть
+(async function init(){
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token) { updateNav(false); return; }
+  try {
+    const res = await fetch(API_BASE + '/api/me', { headers: authHeaders() });
+    if (!res.ok) { localStorage.removeItem(TOKEN_KEY); updateNav(false); return; }
+    const data = await res.json();
+    updateNav(true);
+    renderCabinet(data.user);
+    showScreen('cabinet');
+    showTab('hammam');
+    loadServices();
+  } catch(e){
+    updateNav(false);
+  }
+})();
+</script>
+</body>
+</html>
